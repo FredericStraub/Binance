@@ -4,23 +4,23 @@ from telethon import TelegramClient
 import math
 import time
 import re
-
+#pull binance key and secret from file
 with open("details.txt","r") as f:
     content = f.readlines()
 content = [x.strip() for x in content]
 
-api_key = content[1]
+api_key = content[1] 
 sec_key = content[2]
 
 result = ""
 
-api_id = 2871489
-api_hash = '9a86212c74d8126191a7cdc20c86bec7'
+api_id = #your telegram id
+api_hash = #your telegram hash
 
 
 client_tel = TelegramClient("APITELE",api_id,api_hash)
 client_bin = Client(api_key,sec_key)    
-
+#load crypto currencys in list
 l = []
 prices = client_bin.get_all_tickers()
 for i in prices:
@@ -28,6 +28,7 @@ for i in prices:
             l.append(i)
             l[-1]["symbol"] = l[-1]["symbol"][:(len(l[-1]["symbol"])-3)]
 
+#function to get the crypto from the telegram chat post            
 def translatestring(s,names):
 
     regex = re.compile('[^a-zA-Z]')
@@ -58,7 +59,7 @@ def get_trade_price(client,Coin,l):
 
             return price
     return None
-def get_trade_amount(client,Coin,l):
+def get_trade_amount(client,Coin,l): # calculate how much you have to buy, honstly this was the most shit part about coding this if you have a look into the binance api you can see why i had to do it like this
     info = client.get_account()
     myballance = get_wallet(client, "BTC")
     
@@ -70,14 +71,14 @@ def get_trade_amount(client,Coin,l):
     print(myballance,value)
     return math.floor((myballance/float(value))*0.3)
 
-def autotrade(client,Coin,l):
+def autotrade(client,Coin,l): 
     order = client.create_order(
         symbol = Coin+"BTC",
         side=SIDE_BUY,
         type=ORDER_TYPE_MARKET,
         quantity=get_trade_amount(client,Coin,l)
     )
-    print("gekauft")
+    print("purchased")
     
     time.sleep(3.5)
     order = client.create_order(
